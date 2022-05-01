@@ -8,40 +8,74 @@ require_once "./app/controller/usuarioController.php";
 require_once "./app/models/produto.php";
 require_once "./app/controller/produtoController.php";
 
-//phpinfo();
+// phpinfo();
 
 try {
     //Variavel para os resultados
     $result = null;
+    $httpCod = null;
+    $auth = null;
 
-    //Cabeçalho comum da aplicação
+    $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
+
+    header("Access-Control-Allow-Origin: *");
     header("Content-Type: application/json; charset=UTF-8");
 
-    //Validação de rotas
-    $method = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : null;
-    if ($method != null) {
+    if ($method == "OPTIONS") {
+        //Cabeçalho comum da aplicação    
+        header("Access-Control-Allow-Methods: POST, GET, PUT, OPTIONS");
+        header("Access-Control-Allow-Headers: *");
+        header("Access-Control-Max-Age: 3600"); //1hora == 3600 seg;
+        header("Access-Control-Allow-Credentials: true");
+    }
 
+    if ($method != null && $method != "OPTIONS") {
+
+        $authRouterFree = guardian($_SERVER["REQUEST_URI"]);
+
+        //Validação de rotas
         $url = explode("/", $_SERVER["REQUEST_URI"]);
         array_shift($url);
         array_shift($url);
-        // $result = authentic($method, $url);
+
+        $auth = authentic($method, $url);
+        //$auth = "userAll";
+
+        //Verifica validação do usuario
+        if ($auth != null && $url[count($url) - 1] == "logon") {
+            $httpCod = 200;
+            $result = $auth;
+        } else if ($auth != null || $authRouterFree) {
+            $httpCod = 200;
+            $result = route($method, $url);
+        } else {
+            $httpCod = 401;
+            $result = "Usuario sem autorização";
+        }
+
+        //A resposta se não existir errose se existirem dados
+        //header('Content-Type: application/json;charset=utf-8');
+        http_response_code($httpCod);
+        echo json_encode(array("result" => $result));
     } else {
-        throw new Exception();
+        //throw new Exception();
     };
-
-    if ($result == null) {
-        $result = route($method, $url);
-    }
-
-    //A resposta se não existir errose se existirem dados
-    http_response_code(200);
-    echo json_encode(array("result" => $result));
 } catch (Exception $e) {
     http_response_code(404);
     echo json_encode(array("result" => "Pagina não encontrada!"));
 }
 
-
+function guardian($urlPadrao)
+{
+    $urlPadrao = $_SERVER["REQUEST_URI"];
+    $routesFree = [
+        "/api/usuario/logon",
+        "/api/usuario/add",
+        "/api/produto/list"
+    ];
+    //verificar se a rota é uma daquelas do array. Se for retorna o numero. Ele retorna o numero do index do array senão retorna false FALSE;
+    return array_search($urlPadrao, $routesFree);
+}
 function route($method, $url)
 {
     $result = null;
@@ -77,7 +111,7 @@ function route($method, $url)
                                 throw new Exception();
                                 break;
                         }
-                        break;
+                        // break;
                         //produto
                     case "produto":
                         switch ($url[1]) {
