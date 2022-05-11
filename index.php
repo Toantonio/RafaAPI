@@ -85,62 +85,62 @@ function route($method, $url)
             //Leituras
         case "GET": {
                 switch ($url[0]) {
-                    //clinte
-                    case "usuario":
-                        switch ($url[1]) {
-                            case "get": {
-                                    if (!isset($url[2])) throw new Exception();
-                                    $userController = new usuarioController;
-                                    $result = $userController->get($url[2]);
-                                }
-                                break;
+                        //clinte
+                    case "usuario": {
+                            switch ($url[1]) {
+                                case "get": {
+                                        if (!isset($url[2])) throw new Exception();
+                                        $userController = new usuarioController;
+                                        $result = $userController->get($url[2]);
+                                    }
+                                    break;
 
-                            case "list": {
-                                    $userController = new usuarioController;
-                                    $result = $userController->getAll();
-                                }
-                                break;
+                                case "list": {
+                                        $userController = new usuarioController;
+                                        $result = $userController->getAll();
+                                    }
+                                    break;
 
-                            case "listnot": {
-                                    $userController = new usuarioController;
-                                    $result = $userController->getAll(0);
-                                }
-                                break;
+                                case "listnot": {
+                                        $userController = new usuarioController;
+                                        $result = $userController->getAll(0);
+                                    }
+                                    break;
 
-                            default:
-                                throw new Exception();
-                                break;
-                        }
-                        // break;
-                        //produto
-                    case "produto":
-                        switch ($url[1]) {
-                            case "get": {
-                                    if (!isset($url[2])) throw new Exception();
-                                    $produtoController = new ProdutoController;
-                                    $result = $produtoController->get($url[2]);
-                                }
-                                break;
-
-                            case "list": {
-                                    $produtoController = new ProdutoController;
-                                    $result = $produtoController->getAll();
-                                }
-                                break;
-
-                            case "listnot": {
-                                    $produtoController = new ProdutoController;
-                                    $result = $produtoController->getAll(0);
-                                }
-                                break;
-
-                            default:
-                                throw new Exception();
-                                break;
+                                default:
+                                    throw new Exception();
+                                    break;
+                            }
                         }
                         break;
-                      
+                        //produto
+                    case "produto": {
+                            switch ($url[1]) {
+                                case "get": {
+                                        if (!isset($url[2])) throw new Exception();
+                                        $produtoController = new ProdutoController;
+                                        $result = $produtoController->get($url[2]);
+                                    }
+                                    break;
 
+                                case "list": {
+                                        $produtoController = new ProdutoController;
+                                        $result = $produtoController->getAll();
+                                    }
+                                    break;
+
+                                case "listnot": {
+                                        $produtoController = new ProdutoController;
+                                        $result = $produtoController->getAll(0);
+                                    }
+                                    break;
+
+                                default:
+                                    throw new Exception();
+                                    break;
+                            }
+                        }
+                        break;
                     default:
                         throw new Exception();
                         break;
@@ -151,23 +151,24 @@ function route($method, $url)
             //Cadastro
         case "POST": {
                 switch ($url[0]) {
-                    case "usuario":
-                        switch ($url[1]) {
-                            case 'add':
-                            case 'update':
-                                $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
-                                $userController = new usuarioController;
-                                $user = new Usuario;
-                                $user->popo($dadosUser);
-                                if ($user->id != null) { // Se tem id Update se não Add
-                                    $result = $userController->update($user);
-                                } else {
-                                    $result = $userController->add($user);
-                                }
-                                break;
-                            default:
-                                throw new Exception();
-                                break;
+                    case "usuario": {
+                            switch ($url[1]) {
+                                case 'add':
+                                case 'update':
+                                    $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                                    $userController = new usuarioController;
+                                    $user = new Usuario;
+                                    $user->popo($dadosUser);
+                                    if ($user->id != null) { // Se tem id Update se não Add
+                                        $result = $userController->update($user);
+                                    } else {
+                                        $result = $userController->add($user);
+                                    }
+                                    break;
+                                default:
+                                    throw new Exception();
+                                    break;
+                            }
                         }
                         break;
 
@@ -181,18 +182,19 @@ function route($method, $url)
             //Alteração
         case "PUT": {
                 switch ($url[0]) {
-                    case "usuario":
-                        switch ($url[1]) {
-                            case 'update':
-                                $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
-                                $userController = new usuarioController;
-                                $user = new Usuario;
-                                $user->popo($dadosUser);
-                                $result = $userController->update($user);
-                                break;
-                            default:
-                                throw new Exception();
-                                break;
+                    case "usuario": {
+                            switch ($url[1]) {
+                                case 'update':
+                                    $dadosUser = json_decode(file_get_contents('php://input')); //tranformar JSON do body em Objetos
+                                    $userController = new usuarioController;
+                                    $user = new Usuario;
+                                    $user->popo($dadosUser);
+                                    $result = $userController->update($user);
+                                    break;
+                                default:
+                                    throw new Exception();
+                                    break;
+                            }
                         }
                         break;
 
@@ -204,21 +206,21 @@ function route($method, $url)
             break;
 
             //Delete
-        case "DELETE": {
+        case "Delete": {
                 switch ($url[0]) {
-                    case "usuario":
-                        switch ($url[1]) {
-                            case 'delete':
-                                if (!isset($url[2])) throw new Exception();
-                                $userController = new usuarioController;
-                                $result = $userController->delete($url[2]);
-                                break;
-                            default:
-                                throw new Exception();
-                                break;
+                    case "usuario": {
+                            switch ($url[1]) {
+                                case 'delete':
+                                    if (!isset($url[2])) throw new Exception();
+                                    $userController = new usuarioController;
+                                    $result = $userController->delete($url[2]);
+                                    break;
+                                default:
+                                    throw new Exception();
+                                    break;
+                            }
                         }
                         break;
-
                     default:
                         throw new Exception();
                         break;
@@ -265,10 +267,17 @@ function authentic($method, $url)
                 break;
         }
     }
-    if ($token == null) throw new Exception();
+    // if ($token == null) throw new Exception();
+    // $auth = $token != null ? validJWT($token) : null;
+    // if ($token == null && $auth == null) throw new Exception();
+    // $_SESSION[$token] = json_decode($auth);
+
     $auth = $token != null ? validJWT($token) : null;
-    if ($token == null && $auth == null) throw new Exception();
-    $_SESSION[$token] = json_decode($auth);
+
+    if ($token != null && $auth != null) {
+        $_SESSION[$token] = json_decode($auth);
+        $result = isset($result) ? $result : json_decode($auth);
+    }
 
     return $result;
 }

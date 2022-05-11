@@ -137,7 +137,23 @@ class UsuarioController
             throw new Exception("Erro ao acessar a base de dados: " . $e->getMessage());
         }
     }
-
+    public function updatePhoto($id, $fotoName)
+    {
+        try {
+            $sql = "UPDATE usuario 
+                    SET 
+                    foto_perfil = :foto_perfil
+                    WHERE usuario.id = :id";
+            $dao = new DAO;
+            $stman = $dao->conecta()->prepare($sql);
+            $stman->bindParam(":foto_perfil", $fotoName);
+            $stman->bindParam(":id", $id);
+            $stman->execute();
+            return $fotoName;
+        } catch (Exception $e) {
+            throw new Exception("Erro ao atualizado a foto do Usuario: " . $e->getMessage());
+        }
+    }
 
     private  function  formatDateBD($date)
     { // Entrada: DD/MM/YYYY -> YYYY/MM/DD
